@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { AuthService } from '../services/auth';
 
 interface Job {
@@ -28,8 +29,8 @@ export class BrowseJobs implements OnInit {
   showMatchNotification = false;
   noMatchNotification = false;
 
-  JOBS_API = 'http://localhost:5000/api/jobs/all';
-  RECOMMEND_API = 'http://localhost:5000/api/recommend-jobs';
+  JOBS_API = `${environment.apiUrl}/jobs/all`;
+  RECOMMEND_API = `${environment.apiUrl}/recommend-jobs`;
 
   constructor(
     private http: HttpClient,
@@ -132,7 +133,7 @@ export class BrowseJobs implements OnInit {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
     this.http.post(
-      'http://localhost:5000/api/applications',
+      `${environment.apiUrl}/applications`,
       { jobId },
       { headers }
     ).subscribe(() => {

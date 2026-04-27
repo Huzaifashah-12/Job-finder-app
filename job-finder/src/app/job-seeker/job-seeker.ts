@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { BrowseJobs } from '../browse-jobs/browse-jobs';
 import { MyApplications } from '../my-applications/my-applications';
@@ -25,7 +26,7 @@ export class JobSeeker implements OnInit {
     activeJobs: 0,
   };
 
-  private baseUrl = 'http://localhost:5000/api'; // backend URL
+  private baseUrl = environment.apiUrl; // backend URL
 
   constructor(
     private router: Router,

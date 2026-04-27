@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../services/auth';
 
@@ -19,7 +20,7 @@ export class MyProfile implements OnInit {
   isEditing = false;
   originalData: any;
 
-  private API = 'http://localhost:5000/api/profile';
+  private API = `${environment.apiUrl}/profile`;
 
   constructor(
     private fb: FormBuilder,

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -25,7 +26,7 @@ export class Employer implements OnInit {
   companyName: string = '';
 
   jobs: any[] = [];
-  API_JOBS = 'http://localhost:5000/api/jobs';
+  API_JOBS = `${environment.apiUrl}/jobs`;
 
   constructor(
     private http: HttpClient,

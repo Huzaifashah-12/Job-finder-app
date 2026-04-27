@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
@@ -12,7 +13,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class RegisterCompany implements OnInit {
 
   companyForm!: FormGroup;
-  API = 'http://localhost:5000/api/company';
+  API = `${environment.apiUrl}/company`;
 
   constructor(private fb: FormBuilder, private http: HttpClient) {}
 

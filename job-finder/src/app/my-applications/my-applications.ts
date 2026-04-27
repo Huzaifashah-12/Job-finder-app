@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth';
 
@@ -14,7 +15,7 @@ import { AuthService } from '../services/auth';
 export class MyApplications implements OnInit {
 
   applications: any[] = [];
-  API = 'http://localhost:5000/api/applications/me';
+  API = `${environment.apiUrl}/applications/me`;
 
   constructor(
     private http: HttpClient,

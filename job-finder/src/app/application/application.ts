@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-application',
@@ -12,9 +13,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class Application implements OnInit {
 
   applications: any[] = [];
-  API = 'http://localhost:5000/api/applications/recruiter'; // Updated route
+  API = `${environment.apiUrl}/applications/recruiter`; // Updated route
   /** Backend serves files under /uploads (not site root). */
-  private readonly API_ORIGIN = 'http://localhost:5000';
+  private readonly API_ORIGIN = environment.apiOrigin;
 
   constructor(private http: HttpClient) {}
 
