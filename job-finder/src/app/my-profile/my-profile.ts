@@ -47,6 +47,13 @@ export class MyProfile implements OnInit {
         if (res) {
           this.profileForm.patchValue(res);
           this.originalData = res;
+          
+          if (this.originalData.cv && !this.originalData.cv.startsWith('http')) {
+            this.originalData.cvUrl = `${environment.apiUrl}/uploads/${encodeURIComponent(this.originalData.cv)}`;
+          } else if (this.originalData.cv && this.originalData.cv.startsWith('http')) {
+            this.originalData.cvUrl = this.originalData.cv;
+          }
+
           this.profileForm.disable();
         }
       },
@@ -106,6 +113,13 @@ export class MyProfile implements OnInit {
         this.isEditing = false;
         this.profileForm.disable();
         this.originalData = res;
+        
+        if (this.originalData.cv && !this.originalData.cv.startsWith('http')) {
+          this.originalData.cvUrl = `${environment.apiUrl}/uploads/${encodeURIComponent(this.originalData.cv)}`;
+        } else if (this.originalData.cv && this.originalData.cv.startsWith('http')) {
+          this.originalData.cvUrl = this.originalData.cv;
+        }
+
         this.selectedFile = null;
       },
       error: err => console.error('Update failed', err)

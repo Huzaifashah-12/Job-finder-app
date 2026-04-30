@@ -1,13 +1,19 @@
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import authRoutes from './routes/authRoutes.js';
 import jobSeekerRoutes from './routes/jobSeekerRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
 import companyRoutes from './routes/companyRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
-import applicationsRoutes from './routes/applicationsRoutes.js'; // ✅ import it
+import applicationsRoutes from './routes/applicationsRoutes.js';
 import recommendRoutes from './routes/recommendation.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
 // Middleware
@@ -18,7 +24,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/jobseeker', jobSeekerRoutes);
 app.use('/api/profile', profileRoutes);
-app.use('/uploads', express.static('uploads')); // to access uploaded files
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads'))); // Use absolute path
 app.use('/api/company', companyRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/applications', applicationsRoutes);

@@ -1,23 +1,22 @@
 import multer from 'multer';
-import { S3Client } from '@aws-sdk/client-s3';
-import multerS3 from 'multer-s3';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
-const s3 = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-1',
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'your-access-key-id',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'your-secret-access-key',
-  }
-});
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const storage = multerS3({
-  s3: s3,
-  bucket: process.env.AWS_S3_BUCKET_NAME || 'your-bucket-name',
-  // acl: 'public-read', // Removed, bucket ACLs are usually disabled now
-  metadata: function (req, file, cb) {
-    cb(null, { fieldName: file.fieldname });
+// Ensure uploads directory exists at backend/uploads
+const uploadDir = path.join(__dirname, '..', 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
   },
-  key: function (req, file, cb) {
+  filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname);
   }
 });

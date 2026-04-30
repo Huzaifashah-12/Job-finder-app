@@ -21,7 +21,7 @@ export const getProfile = async (req, res) => {
       if (profileData.cv.startsWith('http')) {
         profileData.cvUrl = profileData.cv;
       } else {
-        profileData.cvUrl = `${req.protocol}://${req.get('host')}/uploads/${profileData.cv}`;
+        profileData.cvUrl = `${req.protocol}://${req.get('host')}/api/uploads/${profileData.cv}`;
       }
     }
 
@@ -75,7 +75,7 @@ export const updateProfile = async (req, res) => {
       if (profileData.cv.startsWith('http')) {
         profileData.cvUrl = profileData.cv;
       } else {
-        profileData.cvUrl = `${req.protocol}://${req.get('host')}/uploads/${profileData.cv}`;
+        profileData.cvUrl = `${req.protocol}://${req.get('host')}/api/uploads/${profileData.cv}`;
       }
     }
 

@@ -13,7 +13,7 @@ const addCvUrl = (app, req) => {
     if (appObj.cv.startsWith('http')) {
       appObj.cvUrl = appObj.cv;
     } else {
-      appObj.cvUrl = `${req.protocol}://${req.get('host')}/uploads/${appObj.cv}`;
+      appObj.cvUrl = `${req.protocol}://${req.get('host')}/api/uploads/${appObj.cv}`;
     }
   }
   return appObj;
