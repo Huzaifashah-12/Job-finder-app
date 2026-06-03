@@ -20,6 +20,11 @@ export class SignIn {
 
   signInForm: FormGroup;
   errorMessage = '';
+  showPassword = false;
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   constructor(
     private fb: FormBuilder,

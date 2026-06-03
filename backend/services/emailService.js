@@ -27,3 +27,32 @@ export const sendJobNotification = async (userEmail, jobTitle, companyName) => {
     console.error('Error sending email:', error);
   }
 };
+
+export const sendPasswordResetEmail = async (userEmail, otpCode) => {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: userEmail,
+    subject: 'Password Reset Verification Code',
+    text: `Hello,\n\nYou requested a password reset. Your verification code is:\n\n${otpCode}\n\nThis code will expire in 15 minutes.\n\nIf you did not request this, please ignore this email.`
+  };
+
+  try {
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.log(`Password reset email (simulation) to ${userEmail}: Code ${otpCode}`);
+      return;
+    }
+    await transporter.sendMail(mailOptions);
+    console.log(`Password reset email sent to ${userEmail}`);
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    throw error;
+  }
+};

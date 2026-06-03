@@ -46,4 +46,14 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  // 🔹 Forgot Password API
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.API_URL}/forgot-password`, { email });
+  }
+
+  // 🔹 Reset Password API
+  resetPassword(data: any): Observable<any> {
+    return this.http.post(`${this.API_URL}/reset-password`, data);
+  }
 }

@@ -37,10 +37,17 @@
       <div>
         <label class="block text-sm font-medium text-purple-700">Password</label>
 
-        <input type="password"
-               formControlName="password"
-               placeholder="Enter your password"
-               class="w-full mt-1 px-4 py-2 border border-purple-200 rounded-lg">
+        <div class="relative mt-1">
+          <input [type]="showPassword ? 'text' : 'password'"
+                 formControlName="password"
+                 placeholder="Enter your password"
+                 class="w-full px-4 py-2 pr-10 border border-purple-200 rounded-lg">
+          <button type="button"
+                  (click)="togglePasswordVisibility()"
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-purple-600 hover:text-purple-800 text-xs font-semibold focus:outline-none">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
 
         <p *ngIf="signInForm.get('password')?.touched && signInForm.get('password')?.errors?.['required']"
            class="text-red-500 text-sm">Password is required</p>
@@ -49,12 +56,17 @@
            class="text-red-500 text-sm">Password must be at least 6 characters</p>
       </div>
 
-      <!-- Remember -->
-      <div class="flex items-center">
-        <input type="checkbox"
-               formControlName="rememberMe"
-               class="accent-purple-600">
-        <span class="ml-2 text-gray-600 text-sm">Remember me</span>
+      <!-- Remember & Forgot Password -->
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center">
+          <input type="checkbox"
+                 formControlName="rememberMe"
+                 class="accent-purple-600">
+          <span class="ml-2 text-gray-600">Remember me</span>
+        </label>
+        <a routerLink="/forgot-password" class="text-purple-600 hover:underline font-medium">
+          Forgot Password?
+        </a>
       </div>
 
       <!-- BUTTON -->

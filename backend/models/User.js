@@ -23,6 +23,14 @@ const userSchema = new mongoose.Schema(
       enum: ["seeker", "recruiter"],
       default: "seeker",
     },
+    resetPasswordOTP: {
+      type: String,
+      default: null,
+    },
+    resetPasswordOTPExpires: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

@@ -4,6 +4,7 @@ import { SignIn } from './sign-in/sign-in';
 import { Employer } from './employer/employer';
 import { JobSeeker } from './job-seeker/job-seeker';
 import { Home } from './home/home';
+import { ForgotPassword } from './forgot-password/forgot-password';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' }, // <-- default route
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'sign-in', component: SignIn },
   { path: 'employer', component: Employer },
   { path: 'jobseeker', component: JobSeeker },
+  { path: 'forgot-password', component: ForgotPassword },
   { path: '**', redirectTo: 'home' } // <-- fallback route for unknown URLs
 ];

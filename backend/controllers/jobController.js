@@ -26,7 +26,30 @@ export const createJob = async (req, res) => {
 
     // Notify users
     try {
-      const matchingProfiles = await Profile.find({ category: category });
+      const allProfiles = await Profile.find({});
+      const matchingProfiles = allProfiles.filter(profile => {
+        // Case-insensitive category match
+        if (profile.category && category && profile.category.trim().toLowerCase() === category.trim().toLowerCase()) {
+          return true;
+        }
+
+        // Skill-based matching
+        if (profile.skills && profile.skills.length > 0) {
+          const jobText = `${job.title} ${job.description}`.toLowerCase();
+          return profile.skills.some(skill => {
+            if (!skill) return false;
+            const cleanSkill = skill.trim().toLowerCase();
+            if (cleanSkill.length < 2) return false;
+            
+            const escapedSkill = cleanSkill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp(`\\b${escapedSkill}\\b`, 'i');
+            return regex.test(jobText);
+          });
+        }
+
+        return false;
+      });
+
       for (const profile of matchingProfiles) {
         if (profile.email) {
           sendJobNotification(profile.email, job.title, company.name);

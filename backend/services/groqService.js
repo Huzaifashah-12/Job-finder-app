@@ -1,3 +1,51 @@
+const VALID_CATEGORIES = [
+  "Full Stack",
+  "Frontend",
+  "Backend",
+  "DevOps",
+  "Mobile",
+  "Data Science",
+  "UI/UX"
+];
+
+export function normalizeCategory(cat) {
+  if (!cat || typeof cat !== 'string') return "Other";
+  
+  const trimmed = cat.trim().toLowerCase();
+  
+  // Find case-insensitive match
+  for (const validCat of VALID_CATEGORIES) {
+    if (validCat.toLowerCase() === trimmed) {
+      return validCat;
+    }
+  }
+  
+  // Fuzzy match common synonyms
+  if (trimmed.includes("fullstack") || trimmed.includes("full-stack") || trimmed.includes("full stack")) {
+    return "Full Stack";
+  }
+  if (trimmed.includes("front") || trimmed.includes("react") || trimmed.includes("angular")) {
+    return "Frontend";
+  }
+  if (trimmed.includes("back") || trimmed.includes("node") || trimmed.includes("django")) {
+    return "Backend";
+  }
+  if (trimmed.includes("devops") || trimmed.includes("cloud") || trimmed.includes("aws") || trimmed.includes("sysadmin")) {
+    return "DevOps";
+  }
+  if (trimmed.includes("mobile") || trimmed.includes("flutter") || trimmed.includes("android") || trimmed.includes("ios")) {
+    return "Mobile";
+  }
+  if (trimmed.includes("data") || trimmed.includes("python") || trimmed.includes("machine learning") || trimmed.includes("ai")) {
+    return "Data Science";
+  }
+  if (trimmed.includes("ui") || trimmed.includes("ux") || trimmed.includes("designer") || trimmed.includes("design")) {
+    return "UI/UX";
+  }
+  
+  return "Other";
+}
+
 function safeParse(text) {
   try {
     return JSON.parse(text);
@@ -87,21 +135,21 @@ export async function getJobRecommendations(cvText, jobs) {
       return classifyJobs(jobs).slice(0, 5);
     }
 
-    const cleanJobs = cleanAndFilterJobs(jobs).slice(0, 10);
+    const cleanJobs = cleanAndFilterJobs(jobs).slice(0, 40);
 
     const prompt = `
-You are a professional job filtering AI.
+You are a professional job recommendation AI.
 
 TASK:
-- Remove invalid or garbage jobs
-- Classify valid jobs into:
-  Full Stack, Frontend, Backend, DevOps, Mobile
+- Analyze the candidate's CV text.
+- From the provided list of jobs, select up to 5 jobs that match the candidate's skills, experience, and career profile.
+- Order the matching jobs starting with the best match.
+- If no jobs match the CV, return an empty array [].
 
 RULES:
-- Ignore spam or meaningless titles
-- No empty response
-- No hallucination
-- Return ONLY JSON
+- Do not recommend jobs that are unrelated to the candidate's field.
+- Ignore spam or meaningless titles.
+- Return ONLY valid JSON array of objects. Do not include any explanations.
 
 FORMAT:
 [
@@ -132,7 +180,7 @@ ${JSON.stringify(cleanJobs)}
         body: JSON.stringify({
           model: "llama3-70b-8192",
           messages: [{ role: "user", content: prompt }],
-          temperature: 0.2,
+          temperature: 0.1,
         }),
       }
     );
@@ -143,10 +191,6 @@ ${JSON.stringify(cleanJobs)}
     text = text.replace(/```json/g, "").replace(/```/g, "");
 
     const result = safeParse(text);
-
-    if (!result || result.length === 0) {
-      return classifyJobs(cleanJobs);
-    }
 
     return result;
   } catch (err) {
@@ -203,7 +247,11 @@ ${cvText}
     text = text.replace(/```json/g, "").replace(/```/g, "");
 
     try {
-      return JSON.parse(text);
+      const parsed = JSON.parse(text);
+      if (parsed && parsed.category) {
+        parsed.category = normalizeCategory(parsed.category);
+      }
+      return parsed;
     } catch {
       return { category: "Other", skills: [] };
     }
@@ -249,8 +297,7 @@ Job Description: ${description}
     const data = await response.json();
     const category = data?.choices?.[0]?.message?.content?.trim();
     
-    const validCategories = ["Full Stack", "Frontend", "Backend", "DevOps", "Mobile", "Data Science", "UI/UX"];
-    return validCategories.includes(category) ? category : "Other";
+    return normalizeCategory(category);
   } catch (err) {
     console.error("GROQ JOB CATEGORIZATION ERROR:", err.message);
     return "Other";
